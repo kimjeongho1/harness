@@ -1,0 +1,34 @@
+---
+name: ship
+description: 사용자가 SHIP, "커밋하고 배포해", "커밋해" 등을 말할 때 사용. 테스트 → diff 리뷰 → 커밋 → Docker 빌드·실행 → 헬스체크를 순서대로 하고 결과를 표로 보고한다. push와 실제 외부 배포는 하지 않는다.
+---
+# ship — 테스트하고, 확인하고, 커밋하고, 컨테이너로 띄워 본다
+과제가 컨테이너를 요구하지 않으면 4단계는 건너뛰고 로컬 실행 확인만 한다.
+각 단계 결과를 PASS/FAIL/NOT_RUN으로. **FAIL이면 거기서 멈추고 보고**한다. 우회하지 않는다.
+
+## 1. 테스트
+있는 테스트를 실행한다. 없으면 핵심 기능 1개를 확인하는 최소 명령을 실행한다.
+
+## 2. diff 리뷰 (커밋 전)
+`git status`, `git diff --stat`, `git diff`를 보고 보고:
+(1) 이번 작업과 무관한 변경 (2) 삭제·약화된 기존 기능 (3) 비밀값·개인정보·절대경로 (4) 디버그 잔여물 (5) **내 역할 밖 파일**(AGENTS.md 0번 표) (6) 코드·주석·문서에 들어간 대괄호 표시(`[가정]`, `[미검증]`, `[사용자 결정 필요]`) (7) **더 줄일 수 있나**: 중복 코드, 안 쓰는 함수·import, 몇 줄 때문에 추가한 의존성, AGENTS.md 2-1 사다리 위반(ponytail-review 관점). (1)~(6)은 커밋에서 빼고 알린다. (7)은 고치지 말고 후보로 보고한다(사용자가 빼라고 하면 refactor 커밋).
+
+## 3. 커밋
+`타입: 무엇 + 왜(D-번호) + 검증 결과` (feat/fix/test/docs/build/refactor/chore). 내 역할의 파일만 `git add <파일>`로 담는다(`git add .` 금지). push 금지.
+
+## 4. Docker (처음이면 파일부터)
+- Dockerfile: 공식 slim 베이스, 의존성 먼저 복사, 서버는 0.0.0.0, 포트 노출, 시작 시 DB 없으면 생성.
+- .dockerignore: .env, DB 파일, 캐시, .git, .harness, .agents 제외.
+- `/health` 엔드포인트.
+- `docker build -t app:<커밋해시 앞 7자리> .` → `docker run -d -p <포트>:<포트> --name app_check ...` → `curl -s localhost:<포트>/health` → 확인 후 `docker rm -f app_check`.
+- docker를 쓸 수 없으면 NOT_RUN + 이유. 로컬 실행 + 헬스체크까지만.
+- how_to_use 문서의 실행 방법에 넣을 명령은 "C에게: 실행 명령 …"으로 넘긴다.
+
+## 5. 보고
+| 단계 | 결과 | 근거(명령·출력 한 줄) |
+|---|---|---|
+| 테스트 | | |
+| diff 리뷰 | | |
+| 커밋 | | 해시 |
+| docker build | | |
+| run + /health | | |
