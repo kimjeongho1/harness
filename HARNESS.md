@@ -21,8 +21,8 @@ install.sh: 하네스를 `.harness`로 정리 → `.harness/`·`.agents/`를 git
 | research | A | 알고리즘·방법 선택이 필요할 때. 10분(원문 읽기 포함 15분), 코드 금지 |
 | data_check | A | 데이터를 처음 받았을 때·결과가 이상할 때. `tools/profile_data.py`로 함정(중복·형식·단위·이상값·상태·고아 참조·지시문)을 찾아 처리 선택지와 담당자 질문으로 |
 | data_to_db | A | CSV 여러 개 → DB |
-| ship | A | SHIP / "커밋하고 배포해": 테스트 → 리뷰 → 커밋 → Docker → /health |
-| record | C | 기록해 / RECORD / HANDOFF |
+| ship | A | SHIP / "커밋하고 배포해": 테스트 → 리뷰 → 커밋 → Docker → /health → 사용자 흐름 점검 |
+| record | C | RECORD(INBOX·커밋 반영) / HANDOFF / 기록해, 동결 후 서술형 노트·발표 1장 |
 | score_check | A·C | STATE·RECORD·L1 직후·동결 직전에 놓친 점수 행동을 먼저 알림 |
 
 templates/: DECISIONS, HANDOFF, how_to_use, ai_retrospective (과제가 정한 형식이 우선).
@@ -31,10 +31,14 @@ tools/profile_data.py: CSV 점검표(표준 라이브러리만, 원본은 읽기
 ## 세션 시작 (첫 마디는 짧게, 절차는 START.md에 있다)
 탭 4개: A, B, C, 서버 전용. 각 Codex에 `너는 A`, `너는 C`, `너는 B`.
 ```
-[B 호출] REVIEW  (또는 TRIM)
-[C 호출] 기록해: Q-3 답 "…". 내 결정은 …   /   RECORD   /   HANDOFF
-[A 호출] DECISIONS D-3 반영해  /  SHIP  /  STATE
+[A 호출] 담당자 답 원문 붙여 넣기 (A가 docs/INBOX.md에 남김)  /  SHIP  /  STATE
+[C 호출] RECORD (30–40분마다, INBOX·커밋을 읽어 기록)  /  HANDOFF  /  기록해: …(직접 전할 때)
+[B 호출] REVIEW (L1 직후·동결 직전)  /  TRIM
+[A 교체] 기존 A "지금까지 커밋해" → C `HANDOFF` → A 탭에서 새 대화 → `너는 A. RESUME`
 ```
+- C에게 복사해 줄 필요 없음: A가 `docs/INBOX.md`에 덧붙이고 C가 RECORD 때 읽는다.
+- 담당자는 파일·화면을 볼 수 없다. 결과와 선택지는 말(숫자·예시)로 전한다.
+- 동결 후 사용자가 미리보기에서 직접 눌러 보기(ship 4-1): 로그인 유지, 오류·빈 상태·대체 결과 구분.
 
 ## 출처 (아이디어를 가져와 요약·변형했다. 원문을 그대로 복사한 파일은 없다)
 | 출처 | 라이선스 | 가져온 것 | 쓰인 곳 |

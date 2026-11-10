@@ -22,3 +22,4 @@
 - 테스트:
 
 last_read: <커밋 해시>
+inbox_read: <INBOX에서 마지막으로 옮긴 줄 번호>
